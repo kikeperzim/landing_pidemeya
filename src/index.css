@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+@theme {
+    /* Colors from Stitch Design System */
+    --color-surface-container-high: #2a2a2a;
+    --color-surface-container-lowest: #0e0e0e;
+    --color-inverse-surface: #e2e2e2;
+    --color-tertiary-container: #009af8;
+    --color-on-surface: #e2e2e2;
+    --color-primary: #ffb596;
+    --color-primary-fixed-dim: #ffb596;
+    --color-surface-dim: #131313;
+    --color-secondary-fixed: #dce1ff;
+    --color-on-secondary: #1a2c67;
+    --color-on-primary-container: #531c00;
+    --color-surface-bright: #393939;
+    --color-primary-fixed: #ffdbcd;
+    --color-surface-container: #1f1f1f;
+    --color-on-tertiary-container: #002f51;
+    --color-surface-tint: #ffb596;
+    --color-tertiary-fixed: #d0e4ff;
+    --color-surface-variant: #353535;
+    --color-tertiary: #9ccaff;
+    --color-background: #131313;
+    --color-outline: #a98a7d;
+    --color-error-container: #93000a;
+    --color-on-tertiary-fixed-variant: #00497a;
+    --color-on-secondary-fixed: #001550;
+    --color-on-secondary-fixed-variant: #32437f;
+    --color-on-error-container: #ffdad6;
+    --color-on-background: #e2e2e2;
+    --color-inverse-on-surface: #303030;
+    --color-on-primary-fixed: #360f00;
+    --color-on-surface-variant: #e2bfb1;
+    --color-inverse-primary: #a33e00;
+    --color-surface: #131313;
+    --color-tertiary-fixed-dim: #9ccaff;
+    --color-on-primary-fixed-variant: #7d2d00;
+    --color-secondary-fixed-dim: #b6c4ff;
+    --color-on-tertiary-fixed: #001d35;
+    --color-secondary-container: #32437f;
+    --color-surface-container-highest: #353535;
+    --color-on-error: #690005;
+    --color-on-primary: #581e00;
+    --color-error: #ffb4ab;
+    --color-on-tertiary: #003256;
+    --color-outline-variant: #5a4137;
+    --color-primary-container: #fb650a;
+    --color-secondary: #b6c4ff;
+    --color-surface-container-low: #1b1b1b;
+    --color-on-secondary-container: #a2b2f6;
+
+    /* Consistent Modern Typography: Plus Jakarta Sans */
+    --font-headline: "Plus Jakarta Sans", sans-serif;
+    --font-body: "Plus Jakarta Sans", sans-serif;
+    --font-label: "Plus Jakarta Sans", sans-serif;
+    --font-button: "Plus Jakarta Sans", sans-serif;
+    --font-serif: "Plus Jakarta Sans", sans-serif;
+    --font-sans: "Plus Jakarta Sans", sans-serif;
+    --font-ui: "Plus Jakarta Sans", sans-serif;
+
+    /* Border Radius adjustments for a modern look */
+    --radius-xs: 0.125rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-full: 9999px;
+}
+
+@layer base {
+  :root {
+    --color-surface-container-high: #2a2a2a;
+    --color-surface-container-lowest: #0e0e0e;
+    --color-inverse-surface: #e2e2e2;
+    --color-on-surface: #e2e2e2;
+    --color-surface-dim: #131313;
+    --color-surface-bright: #393939;
+    --color-surface-container: #1f1f1f;
+    --color-surface-variant: #353535;
+    --color-background: #131313;
+    --color-surface: #131313;
+    --color-surface-container-highest: #353535;
+    --color-surface-container-low: #1b1b1b;
+    --color-on-background: #e2e2e2;
+    --color-secondary-container: #353535;
+    --color-on-secondary: #ffffff;
+  }
+
+  .light {
+    --color-surface-container-high: #f0f0f0;
+    --color-surface-container-lowest: #ffffff;
+    --color-inverse-surface: #1a1a1a;
+    --color-on-surface: #1a1a1a;
+    --color-surface-dim: #f5f5f5;
+    --color-surface-bright: #ffffff;
+    --color-surface-container: #f9f9f9;
+    --color-surface-variant: #eeeeee;
+    --color-background: #ffffff;
+    --color-surface: #ffffff;
+    --color-surface-container-highest: #e0e0e0;
+    --color-surface-container-low: #fcfcfc;
+    --color-on-background: #1a1a1a;
+    --color-secondary-container: #f0f0f0;
+    --color-on-secondary: #1a1a1a;
+    
+    /* Adjust text colors for light mode */
+    color: var(--color-on-surface);
+  }
+
+  * {
+    font-family: var(--font-body);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer utilities {
+    /* Glass effect for navigation */
+    .nav-glass {
+        background-color: color-mix(in srgb, var(--color-surface), transparent 40%);
+        backdrop-filter: blur(24px);
+    }
+
+    .light .nav-glass {
+        background-color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Temp fix for light mode test - forcing dark text on white text classes */
+    .light .text-white, 
+    .light h1, .light h2, .light h3, .light h4, .light p {
+        color: var(--color-on-surface) !important;
+    }
+    
+    .light .text-white\/70, .light .text-white\/60, .light .text-white\/50 {
+        color: rgba(26, 26, 26, 0.6) !important;
+    }
+
+    /* Speed Element Accent */
+    .speed-line {
+        height: 2px;
+        background-color: var(--color-primary-container);
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+#spline-bg {
+  background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 100%);
+  transition: opacity 1.5s ease;
+}
+
+#spline-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(251, 101, 10, 0.05) 0%, transparent 50%, rgba(251, 101, 10, 0.02) 100%);
+  pointer-events: none;
+}
+
+.loaded #spline-bg {
+  background: transparent;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+@keyframes blob {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-blob {
+  animation: blob 10s infinite alternate;
+}
+
+/* Optimize Spline View for mobile */
+@media (max-width: 768px) {
+  spline-viewer {
+    transform: scale(1.1);
+  }
+}

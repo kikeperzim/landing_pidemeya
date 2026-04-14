@@ -1,0 +1,83 @@
+
+
+const benefits = [
+  {
+    title: "Ahorras Tiempo",
+    description: "El sistema automatizado hace el trabajo pesado por ti, eliminando tareas manuales repetitivas.",
+    icon: "schedule"
+  },
+  {
+    title: "Atiendes más rápido",
+    description: "Tus clientes reciben respuesta e interactúan con el bot de forma inmediata, 24/7.",
+    icon: "bolt"
+  },
+  {
+    title: "Menos Errores",
+    description: "La ubicación GPS llega exacta al sistema, eliminando confusiones y retrasos en las entregas.",
+    icon: "gps_fixed"
+  },
+  {
+    title: "Repartidores Eficientes",
+    description: "Reciben, aceptan y gestionan sus rutas de entrega directamente desde su móvil sin llamadas.",
+    icon: "moped"
+  },
+  {
+    title: "Vendes Más",
+    description: "Una mejor experiencia de usuario se traduce en clientes más felices y un mayor volumen de pedidos.",
+    icon: "trending_up"
+  }
+];
+
+export default function Benefits() {
+  return (
+    <section className="py-20 md:py-32 relative overflow-hidden">
+      {/* Decorative background visual */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-20 pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary-container/20 to-transparent blur-3xl rounded-full"></div>
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col lg:flex-row items-center gap-16 md:gap-24">
+          <div className="lg:w-1/2">
+            <div className="speed-line w-12 mb-6 bg-primary-container h-1 rounded-full"></div>
+            <h2 className="font-headline text-4xl md:text-6xl text-on-surface mb-8 leading-tight">
+              ¿Qué gana <span className="text-primary-container italic">tu negocio?</span>
+            </h2>
+            <p className="text-on-surface/60 font-body text-lg mb-12 max-w-xl">
+              Nuestra tecnología no solo automatiza, sino que transforma la rentabilidad y eficiencia de tu operación diaria.
+            </p>
+            
+            <div className="space-y-8">
+              {benefits.map((benefit, idx) => (
+                <div key={idx} className="flex gap-6 group hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-on-surface/5 border border-on-surface/10 flex items-center justify-center group-hover:border-primary-container transition-colors">
+                    <span className="material-symbols-outlined text-primary-container text-2xl">
+                      {benefit.icon}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-headline text-on-surface font-bold text-xl mb-2">{benefit.title}</h3>
+                    <p className="text-on-surface/50 text-sm max-w-md">{benefit.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="lg:w-1/2 relative">
+             <div className="relative z-10 rounded-3xl overflow-hidden border border-on-surface/10 shadow-xl bg-surface-container/40 backdrop-blur-md p-2">
+                <img 
+                  src="/benefits.webp" 
+                  alt="Beneficios del sistema" 
+                  className="w-full h-auto rounded-2xl opacity-90 hover:scale-105 transition-transform duration-1000"
+                />
+             </div>
+             {/* Abstract decorative elements */}
+             <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary-container/20 blur-3xl rounded-full animate-pulse-glow"></div>
+             <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-primary-container/10 blur-3xl rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

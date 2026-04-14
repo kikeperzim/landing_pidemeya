@@ -1,0 +1,6 @@
+src/components/Header.tsx(1,10): error TS2305: Module '"react"' has no exported member 'useEffect'.
+src/components/Header.tsx(1,21): error TS2305: Module '"react"' has no exported member 'useState'.
+src/components/Layout.tsx(1,10): error TS2305: Module '"react"' has no exported member 'useEffect'.
+src/components/Layout.tsx(1,21): error TS2305: Module '"react"' has no exported member 'useState'.
+src/main.tsx(1,10): error TS2305: Module '"react"' has no exported member 'StrictMode'.
+src/pages/Projects.tsx(106,18): error TS2339: Property 'spline-viewer' does not exist on type 'JSX.IntrinsicElements'.
