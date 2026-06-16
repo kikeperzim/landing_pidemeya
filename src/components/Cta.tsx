@@ -15,10 +15,10 @@ export default function Cta() {
       </div>
       <div className="container mx-auto px-6 relative z-10 text-center">
         <h2 className="font-headline text-6xl md:text-8xl text-on-surface mb-12 max-w-4xl mx-auto leading-none">
-          ¿Listo para construir el futuro de tu negocio?
+          ¿Listo para automatizar tu restaurante, licorería o distribuidora?
         </h2>
         <p className="font-body text-on-surface/60 text-xl mb-16 max-w-2xl mx-auto">
-          Únete a las empresas que están transformando su presencia digital en una ventaja competitiva imparable.
+          Lleva tu operación y ventas por WhatsApp al siguiente nivel con nuestras soluciones inteligentes.
         </p>
         <Link
           to="/contactanos"

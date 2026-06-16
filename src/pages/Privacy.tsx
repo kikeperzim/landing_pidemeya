@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function Privacy() {
   return (
-    <div className="relative min-h-screen pt-32 pb-24">
+    <div className="relative min-h-screen pt-44 md:pt-48 pb-24">
       {/* Decorative ambient glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
 
@@ -11,7 +11,7 @@ export default function Privacy() {
         <div className="mb-8 md:mb-12">
           <Link
             to="/"
-            className="group inline-flex items-center gap-2 text-white/50 hover:text-primary-container transition-colors font-label text-xs uppercase tracking-widest"
+            className="group inline-flex items-center gap-2 text-on-surface/50 hover:text-primary-container transition-colors font-label text-xs uppercase tracking-widest"
           >
             <span className="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">
               arrow_back
@@ -125,7 +125,7 @@ export default function Privacy() {
                 datos personales y direcciones de envío en cualquier momento desde la app o contactando a soporte
                 técnico.
               </p>
-              <blockquote className="border-l-2 border-primary-container pl-4 italic text-white/50 text-xs md:text-sm">
+              <blockquote className="border-l-2 border-primary-container pl-4 italic text-on-surface/50 text-xs md:text-sm">
                 "Su derecho a la privacidad es un pilar de nuestra plataforma."
               </blockquote>
             </section>

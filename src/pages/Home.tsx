@@ -1,5 +1,6 @@
 import Hero from '../components/Hero';
 import Services from '../components/Services';
+import Sectors from '../components/Sectors';
 import Features from '../components/Features';
 import Process from '../components/Process';
 import Benefits from '../components/Benefits';
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <Sectors />
       <div id="servicios">
         <Services />
       </div>
