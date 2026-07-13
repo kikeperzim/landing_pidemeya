@@ -3,6 +3,7 @@ import Services from '../components/Services';
 import Sectors from '../components/Sectors';
 import Features from '../components/Features';
 import Process from '../components/Process';
+import LiveDemoSection from '../components/LiveDemoSection';
 import Benefits from '../components/Benefits';
 import Testimonials from '../components/Testimonials';
 import Pricing from '../components/Pricing';
@@ -24,6 +25,9 @@ export default function Home() {
       </div>
       <div id="proceso">
         <Process />
+      </div>
+      <div id="demo">
+        <LiveDemoSection />
       </div>
       <div id="resenas">
         <Testimonials />

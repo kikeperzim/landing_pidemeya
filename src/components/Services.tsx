@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import ScrollReveal from './ScrollReveal';
 
 export default function Services() {
@@ -34,12 +34,13 @@ export default function Services() {
                 </p>
               </div>
               <div className="mt-12 relative z-10">
-                <Link
-                  to="/proyectos"
+                <HashLink
+                  smooth
+                  to="/#demo"
                   className="font-button text-primary-container font-bold tracking-widest text-xs uppercase group-hover:translate-x-2 transition-transform inline-flex items-center gap-2"
                 >
                   Explorar detalles <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                </Link>
+                </HashLink>
               </div>
               <div className="absolute bottom-[-10%] right-[-10%] opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
                 <span className="material-symbols-outlined text-[180px]">devices</span>

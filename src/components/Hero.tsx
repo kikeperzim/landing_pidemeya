@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -150,14 +151,15 @@ export default function Hero() {
           </div>
 
           <div className="w-full pt-15 sm:w-auto transform-gpu">
-            <Link
-              to="/proyectos"
+            <HashLink
+              smooth
+              to="/#demo"
               onMouseMove={handleMagneticMove}
               onMouseLeave={handleMagneticLeave}
               className="font-button bg-secondary-container text-on-secondary text-lg md:text-xl px-10 md:px-14 py-4 md:py-6 font-bold rounded-2xl shadow-lg text-center flex items-center justify-center border border-on-surface/5 hover:bg-on-surface/10 transition-colors duration-300 w-full"
             >
               Ver Funcionalidades
-            </Link>
+            </HashLink>
           </div>
         </div>
       </div>

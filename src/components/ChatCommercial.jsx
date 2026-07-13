@@ -1,6 +1,7 @@
 // ChatCommercial.jsx — PidemeYa WhatsApp-style delivery bot commercial.
 import React from 'react';
-// Mounted inside <Stage> from animations.jsx; reads playhead via window.useTime().
+import { useTime } from './animations.jsx';
+// Mounted inside <Stage> from animations.jsx; reads the playhead via the Stage timeline context.
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const easeOutBack = (t) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
@@ -29,7 +30,7 @@ const M = [
   { from: 'client', text: '1' },
   { from: 'bot', type: 'cart' },
   { from: 'client', text: 'CONFIRMAR Y PAGAR' },
-  { from: 'bot', text: 'Me indicas con qué medio cancelas 🙌', buttons: [{ icon: '🟣', label: 'YAPE/PLIN' }, { icon: '💳', label: 'TARJETA (POS)' }, { icon: '💵', label: 'EFECTIVO' }] },
+  { from: 'bot', text: 'Me indicas con qué medio cancelas 🙌', buttons: [{ icon: '🟣', label: 'YAPE/PLIN' }, { icon: '💳', label: 'TARJETA (POS)' }, { icon: '💵', fill: 'EFECTIVO', label: 'EFECTIVO' }] },
   { from: 'client', text: '🟣 YAPE/PLIN' },
   { from: 'bot', text: '📍 Para finalizar, manda tu ubicación actual de Google Maps (botón Adjuntar 📎 → Ubicación).' },
   { from: 'client', type: 'map', text: 'Sobrios Restobar', sub: 'Manantay, UC, PE' },
@@ -165,7 +166,7 @@ function Bubble({ m, local }) {
 }
 
 function Typing() {
-  const time = window.useTime();
+  const time = useTime();
   const dot = (i) => {
     const ph = (time * 3 + i * 0.4) % 1;
     const y = Math.sin(ph * Math.PI * 2) * 5;
@@ -467,14 +468,14 @@ function InputBar() {
   );
 }
 
-function Phone({ time, accent, opacity, scale }) {
+function Phone({ time, accent, opacity, scale, slogan }) {
   return (
     <div style={{ position: 'absolute', left: '50%', top: '50%', transform: `translate(-50%,-50%) scale(${scale})`, width: 770, height: 1636, opacity }}>
       {/* bezel */}
       <div style={{
         width: '100%', height: '100%', borderRadius: 96, padding: 18,
         background: 'linear-gradient(150deg, #2b2b30 0%, #141416 55%, #060607 100%)',
-        boxShadow: '0 40px 120px rgba(0,0,0,0.7), inset 0 0 0 2px rgba(255,255,255,0.06)',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.06)',
         position: 'relative',
       }}>
         <div style={{ width: '100%', height: '100%', borderRadius: 80, overflow: 'hidden', background: CHAT_BG, display: 'flex', flexDirection: 'column', position: 'relative' }}>
@@ -483,6 +484,7 @@ function Phone({ time, accent, opacity, scale }) {
           <ChatView time={time} />
           <InputBar />
           <Sheet time={time} />
+          <BrandClose time={time} accent={accent} slogan={slogan} />
           {/* dynamic island */}
           <div style={{ position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', width: 128, height: 34, background: '#000', borderRadius: 20, zIndex: 5 }} />
         </div>
@@ -491,39 +493,39 @@ function Phone({ time, accent, opacity, scale }) {
   );
 }
 
-// ── Brand close ──────────────────────────────────────────────────────────────
+// ── Brand close (rendered INSIDE the phone screen) ───────────────────────────
 function BrandClose({ time, accent, slogan }) {
   const local = time - (CLOSE_START + 0.15);
   if (local < -0.3) return null;
-  const appear = clamp(local / 0.7, 0, 1);
+  const appear = clamp(local / 0.6, 0, 1);
   const logoT = easeOutBack(clamp(local / 0.8, 0, 1));
   const sloT = clamp((local - 0.45) / 0.7, 0, 1);
   const ctaT = clamp((local - 0.9) / 0.7, 0, 1);
   const pulse = 0.5 + 0.5 * Math.sin(time * 1.1);
 
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: appear, background: '#07090b' }}>
-      <div style={{ position: 'absolute', width: 1300, height: 1300, borderRadius: '50%', background: `radial-gradient(circle, rgba(242,101,34,${0.22 + pulse * 0.06}) 0%, rgba(242,101,34,0.05) 38%, transparent 62%)` }} />
+    <div style={{ position: 'absolute', inset: 0, zIndex: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: appear, background: '#07090b', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', width: 880, height: 880, borderRadius: '50%', background: `radial-gradient(circle, rgba(242,101,34,${0.24 + pulse * 0.07}) 0%, rgba(242,101,34,0.06) 40%, transparent 64%)` }} />
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
-        <div style={{ width: 200, height: 200, borderRadius: '50%', background: `radial-gradient(circle at 50% 45%, rgba(255,255,255,0.10), transparent 70%)`, position: 'absolute', top: -30, filter: 'blur(8px)' }} />
+        <div style={{ width: 180, height: 180, borderRadius: '50%', background: `radial-gradient(circle at 50% 45%, rgba(255,255,255,0.10), transparent 70%)`, position: 'absolute', top: -24, filter: 'blur(8px)' }} />
         <img src="logo.png" alt="PidemeYa" style={{
-          width: 700, maxWidth: '78%', display: 'block',
+          width: 460, maxWidth: '74%', display: 'block',
           transform: `scale(${0.9 + 0.1 * logoT})`, opacity: clamp(local / 0.5, 0, 1),
           filter: 'drop-shadow(0 6px 30px rgba(242,101,34,0.35)) brightness(1.18) contrast(1.02)',
         }} />
         <div style={{
-          marginTop: 30, color: '#f3ede7', fontSize: 34, fontWeight: 600, letterSpacing: '0.22em',
-          textTransform: 'uppercase', textAlign: 'center', opacity: sloT, transform: `translateY(${(1 - sloT) * 14}px)`,
+          marginTop: 26, color: '#f3ede7', fontSize: 27, fontWeight: 600, letterSpacing: '0.18em',
+          textTransform: 'uppercase', textAlign: 'center', opacity: sloT, transform: `translateY(${(1 - sloT) * 14}px)`, padding: '0 30px',
         }}>
           {slogan || 'AUTOMATIZA · ORGANIZA · ENTREGA MEJOR'}
         </div>
         <div style={{
-          marginTop: 58, display: 'flex', alignItems: 'center', gap: 14,
-          background: GREEN, color: '#063', padding: '20px 36px', borderRadius: 50,
-          fontSize: 30, fontWeight: 700, opacity: ctaT, transform: `translateY(${(1 - ctaT) * 16}px) scale(${0.94 + 0.06 * ctaT})`,
+          marginTop: 46, display: 'flex', alignItems: 'center', gap: 14,
+          background: GREEN, color: '#063', padding: '16px 30px', borderRadius: 50,
+          fontSize: 26, fontWeight: 700, opacity: ctaT, transform: `translateY(${(1 - ctaT) * 16}px) scale(${0.94 + 0.06 * ctaT})`,
           boxShadow: '0 14px 40px rgba(37,211,102,0.35)', color: '#053a1c',
         }}>
-          <span style={{ fontSize: 30 }}>💬</span>
+          <span style={{ fontSize: 26 }}>💬</span>
           <span>Pídelo por WhatsApp</span>
         </div>
       </div>
@@ -535,7 +537,8 @@ function BrandClose({ time, accent, slogan }) {
 function ChatCommercial(props) {
   const accent = props.accent || ACCENT;
   const slogan = props.slogan;
-  const time = window.useTime();
+  const transparent = props.transparent !== false && props.transparent !== 'false';
+  const time = useTime();
 
   const closeProg = clamp((time - CLOSE_START) / 0.7, 0, 1);
   const phoneOpacity = 1 - closeProg;
@@ -545,10 +548,9 @@ function ChatCommercial(props) {
   return (
     <div style={{ position: 'absolute', inset: 0, background: 'transparent', overflow: 'hidden', fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* ambient orange glow behind phone */}
-      <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', width: 1150, height: 1500, borderRadius: '50%', background: `radial-gradient(ellipse at center, rgba(242,101,34,${0.16 + glow * 0.05}) 0%, rgba(242,101,34,0.04) 40%, transparent 66%)`, opacity: phoneOpacity }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(140% 100% at 50% 120%, rgba(242,101,34,0.06), transparent 55%)' }} />
-      {phoneOpacity > 0.01 ? <Phone time={time} accent={accent} opacity={phoneOpacity} scale={phoneScale} /> : null}
-      <BrandClose time={time} accent={accent} slogan={slogan} />
+      {!transparent ? <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', width: 1150, height: 1500, borderRadius: '50%', background: `radial-gradient(ellipse at center, rgba(242,101,34,${0.16 + glow * 0.05}) 0%, rgba(242,101,34,0.04) 40%, transparent 66%)` }} /> : null}
+      {!transparent ? <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(140% 100% at 50% 120%, rgba(242,101,34,0.06), transparent 55%)' }} /> : null}
+      <Phone time={time} accent={accent} opacity={1} scale={1} slogan={slogan} />
     </div>
   );
 }

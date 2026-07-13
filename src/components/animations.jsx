@@ -334,13 +334,12 @@ function Stage({
   width = 1280,
   height = 720,
   duration = 10,
-  background = '#f6f4ef',
+  background = 'transparent',
   fps = 60,
   loop = true,
   autoplay = true,
   persistKey = 'animstage',
-  showControls = true,
-  scaleMode = 'contain',
+  controls = true,
   children,
 }) {
   width = Number(width) || 1280;
@@ -348,6 +347,7 @@ function Stage({
   duration = Number(duration) || 10;
   fps = Number(fps) || 60;
   loop = loop === false || loop === 'false' ? false : true;
+  controls = controls === false || controls === 'false' ? false : true;
   const [time, setTime] = React.useState(() => {
     try {
       const v = parseFloat(localStorage.getItem(persistKey + ':t') || '0');
@@ -373,24 +373,11 @@ function Stage({
     if (!stageRef.current) return;
     const el = stageRef.current;
     const measure = () => {
-      const barH = showControls ? 44 : 0;
-      let s;
-      if (scaleMode === 'cover') {
-        s = Math.max(
-          el.clientWidth / width,
-          (el.clientHeight - barH) / height
-        );
-      } else if (scaleMode === 'width') {
-        s = el.clientWidth / width;
-      } else if (scaleMode === 'fill-width') {
-        s = (el.clientWidth * 0.90) / width;
-      } else {
-        // default: 'contain'
-        s = Math.min(
-          el.clientWidth / width,
-          (el.clientHeight - barH) / height
-        );
-      }
+      const barH = controls ? 44 : 0; // playback bar height
+      const s = Math.min(
+        el.clientWidth / width,
+        (el.clientHeight - barH) / height
+      );
       setScale(Math.max(0.05, s));
     };
     measure();
@@ -401,10 +388,29 @@ function Stage({
       ro.disconnect();
       window.removeEventListener('resize', measure);
     };
-  }, [width, height, showControls, scaleMode]);
+  }, [width, height]);
 
-  // Animation loop
+  // Master-clock sync — when a global player (window.__pyMaster) is present,
+  // this Stage follows it: local time = __pyMap(masterTime, persistKey), falling
+  // back to progress*duration. Lets one external play/scrubber drive many stages.
   React.useEffect(() => {
+    let raf;
+    const tick = () => {
+      const m = window.__pyMaster;
+      if (m && typeof m.time === 'number') {
+        const mapped = window.__pyMap ? window.__pyMap(m.time, persistKey) : null;
+        const lt = (mapped == null) ? (m.progress || 0) * duration : mapped;
+        setTime(clamp(lt, 0, duration));
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => { if (raf) cancelAnimationFrame(raf); };
+  }, [duration, persistKey]);
+
+  // Animation loop (own clock — disabled while a master clock governs us)
+  React.useEffect(() => {
+    if (window.__pyMaster) return;
     if (!playing) {
       lastTsRef.current = null;
       return;
@@ -456,6 +462,8 @@ function Stage({
     [displayTime, duration, playing]
   );
 
+  const isTransparent = true;
+
   return (
     <div
       ref={stageRef}
@@ -463,7 +471,7 @@ function Stage({
         position: 'absolute', inset: 0,
         display: 'flex', flexDirection: 'column',
         alignItems: 'center',
-        background: background === 'transparent' ? 'transparent' : '#0a0a0a',
+        background: 'transparent',
         fontFamily: 'Inter, system-ui, sans-serif',
       }}
     >
@@ -472,20 +480,20 @@ function Stage({
         flex: 1,
         width: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        overflow: 'hidden',
+        overflow: isTransparent ? 'visible' : 'hidden',
         minHeight: 0,
       }}>
         <div
           ref={canvasRef}
           style={{
             width, height,
-            background,
+            background: 'transparent',
             position: 'relative',
             transform: `scale(${scale})`,
             transformOrigin: 'center',
             flexShrink: 0,
-            boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
-            overflow: 'hidden',
+            boxShadow: 'none',
+            overflow: isTransparent ? 'visible' : 'hidden',
           }}
         >
           <TimelineContext.Provider value={ctxValue}>
@@ -495,18 +503,18 @@ function Stage({
       </div>
 
       {/* Playback bar — stacked below canvas, never overlapping */}
-      {showControls && (
-        <PlaybackBar
-          time={displayTime}
-          actualTime={time}
-          duration={duration}
-          playing={playing}
-          onPlayPause={() => setPlaying(p => !p)}
-          onReset={() => { setTime(0); }}
-          onSeek={(t) => setTime(t)}
-          onHover={(t) => setHoverTime(t)}
-        />
-      )}
+      {controls ? (
+      <PlaybackBar
+        time={displayTime}
+        actualTime={time}
+        duration={duration}
+        playing={playing}
+        onPlayPause={() => setPlaying(p => !p)}
+        onReset={() => { setTime(0); }}
+        onSeek={(t) => setTime(t)}
+        onHover={(t) => setHoverTime(t)}
+      />
+      ) : null}
     </div>
   );
 }
@@ -703,12 +711,4 @@ Object.assign(window, {
   Stage, PlaybackBar,
 });
 
-export {
-  Easing, interpolate, animate, clamp,
-  TimelineContext, useTime, useTimeline,
-  Sprite, SpriteContext, useSprite,
-  TextSprite, ImageSprite, RectSprite,
-  Stage, PlaybackBar
-};
-
-
+export { Stage, useTime };

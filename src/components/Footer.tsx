@@ -14,7 +14,6 @@ export default function Footer() {
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-[10px] md:text-xs font-label uppercase tracking-widest text-on-surface">
-          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/proyectos">Proyectos</Link>
           <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/privacidad">Privacidad</Link>
           <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/terminos">Términos</Link>
           <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/contactanos">Contactanos</Link>
