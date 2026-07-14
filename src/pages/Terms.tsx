@@ -47,7 +47,7 @@ export default function Terms() {
             <div className="w-full md:w-2/3 space-y-4 bg-surface-container/30 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-on-surface/5">
               <p className="text-sm md:text-base leading-relaxed">
                 PidemeYa es una marca registrada y operada comercialmente por{' '}
-                <strong className="text-on-surface">Informatic Data Peru E.I.R.L.</strong>, empresa constituida en la
+                <strong className="text-on-surface">Informatic Data Peru E.I.R.L. (RUC 20610802258)</strong>, empresa constituida en la
                 República del Perú. Al acceder a la plataforma PidemeYa o utilizar nuestros servicios de solicitud de
                 productos a domicilio, usted confirma que ha leído, comprendido y aceptado estar legalmente sujeto a
                 estos Términos y Condiciones. Si utiliza el servicio en nombre de una empresa (por ejemplo, para entregas

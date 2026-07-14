@@ -44,7 +44,7 @@ export default function Privacy() {
             <div className="space-y-4 leading-relaxed text-sm md:text-base">
               <p>
                 <strong className="text-on-surface">PidemeYa es una marca registrada y operada comercialmente por
-                Informatic Data Peru E.I.R.L.</strong>, empresa constituida en la República del Perú y responsable del
+                Informatic Data Peru E.I.R.L. (RUC 20610802258)</strong>, empresa constituida en la República del Perú y responsable del
                 tratamiento de los datos personales recopilados a través de esta plataforma, su sitio web y su bot de
                 pedidos por WhatsApp.
               </p>
