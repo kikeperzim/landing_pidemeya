@@ -31,6 +31,9 @@ export default function Terms() {
             Normativas y pautas para el uso de la plataforma PidemeYa. Asegurando un servicio rápido, transparente y
             confiable.
           </p>
+          <p className="font-label text-on-surface/40 text-xs uppercase tracking-widest mt-6">
+            Última actualización: 13 de julio de 2026
+          </p>
         </div>
 
         <div className="space-y-12 md:space-y-24 font-body text-on-surface/70">
@@ -43,10 +46,12 @@ export default function Terms() {
             </div>
             <div className="w-full md:w-2/3 space-y-4 bg-surface-container/30 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-on-surface/5">
               <p className="text-sm md:text-base leading-relaxed">
-                Al acceder a la plataforma PidemeYa o utilizar nuestros servicios de solicitud de productos a domicilio, usted
-                confirma que ha leído, comprendido y aceptado estar legalmente sujeto a estos Términos y Condiciones. Si
-                utiliza el servicio en nombre de una empresa (por ejemplo, para entregas comerciales), declara tener la
-                autoridad para aceptar estos términos en su nombre.
+                PidemeYa es una marca registrada y operada comercialmente por{' '}
+                <strong className="text-on-surface">Informatic Data Peru E.I.R.L.</strong>, empresa constituida en la
+                República del Perú. Al acceder a la plataforma PidemeYa o utilizar nuestros servicios de solicitud de
+                productos a domicilio, usted confirma que ha leído, comprendido y aceptado estar legalmente sujeto a
+                estos Términos y Condiciones. Si utiliza el servicio en nombre de una empresa (por ejemplo, para entregas
+                comerciales), declara tener la autoridad para aceptar estos términos en su nombre.
               </p>
             </div>
           </div>
@@ -140,9 +145,13 @@ export default function Terms() {
             </div>
             <div className="w-full md:w-2/3 space-y-4 bg-surface-container/30 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-on-surface/5">
               <p className="text-sm md:text-base leading-relaxed">
-                Estos Términos se rigen e interpretan según las leyes vigentes del país o estado donde PidemeYa brinda
-                sus servicios. Si tiene dudas sobre nuestras normativas operativas o legales, puede contactar a nuestro
-                equipo de soporte gubernamental a través de los canales oficiales habilitados en la app o sitio web.
+                Estos Términos se rigen e interpretan de conformidad con las leyes de la República del Perú. Para
+                cualquier controversia, las partes se someten a la jurisdicción de los tribunales competentes del Perú.
+                Si tiene dudas sobre nuestras normativas operativas o legales, puede contactar a{' '}
+                <strong className="text-on-surface">Informatic Data Peru E.I.R.L.</strong> al correo{' '}
+                <a href="mailto:contacto@pidemeya.com" className="text-primary-container hover:underline">contacto@pidemeya.com</a>{' '}
+                o vía WhatsApp al{' '}
+                <a href="https://wa.me/51904773671" target="_blank" rel="noreferrer" className="text-primary-container hover:underline">+51 904 773 671</a>.
               </p>
             </div>
           </div>

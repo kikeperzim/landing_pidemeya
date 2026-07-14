@@ -10,7 +10,7 @@ const elasticOut = (t: number) => {
 // Hex to RGBA helper
 const rgba = (hex: string, a: number) => {
   const h = hex.replace('#', '');
-  return `rgba(${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 2), 16)},${parseInt(h.substring(4, 2), 16)},${a})`;
+  return `rgba(${parseInt(h.substring(0, 2), 16)},${parseInt(h.substring(2, 4), 16)},${parseInt(h.substring(4, 6), 16)},${a})`;
 };
 
 // Rounded Manhattan path builder
@@ -225,23 +225,32 @@ export default function N8nFlowAnimationHero() {
 
     const placeLabels = () => {
       const s = stage.getBoundingClientRect();
+      // Escala real derivada del propio rect del escenario. No se usa `scaleFactor`
+      // porque las transformaciones 3D anidadas hacen que getBoundingClientRect
+      // no refleje siempre la escala exterior; esto se autocorrige en cualquier caso.
+      const actualScale = s.width / 1920 || 1;
       nodes.forEach((_, i) => {
         const topEl = topRefs.current[i];
         const labelEl = labelRefs.current[i];
         if (!topEl || !labelEl) return;
         const r = topEl.getBoundingClientRect();
-        const cx = (r.left + r.width / 2 - s.left) / scaleFactor;
-        const cy = (r.top + r.height / 2 - s.top) / scaleFactor;
+        const cx = (r.left + r.width / 2 - s.left) / actualScale;
+        const cy = (r.top + r.height / 2 - s.top) / actualScale;
         labelEl.style.left = `${cx}px`;
-        labelEl.style.top = `${cy + 104}px`;
+        labelEl.style.top = `${cy + 72}px`;
       });
     };
 
     window.addEventListener('resize', fit);
-    // Ejecutar después de un breve instante para dar tiempo a que cargue el layout
-    const initTimeout = setTimeout(() => {
-      fit();
-    }, 100);
+    window.addEventListener('load', fit);
+    // Recalcular cuando el escenario alcance su tamaño final (evita etiquetas
+    // descolocadas si al primer render aún no tenía su escala definitiva).
+    const ro = new ResizeObserver(() => fit());
+    if (stage.parentElement) ro.observe(stage.parentElement);
+    // Reintentos escalonados mientras se asienta el layout y cargan las fuentes.
+    const t1 = setTimeout(fit, 100);
+    const t2 = setTimeout(fit, 400);
+    const t3 = setTimeout(fit, 1200);
 
     // Bucle de animación (requestAnimationFrame)
     const cycleDuration = 7000; // 7 segundos por ciclo
@@ -308,15 +317,15 @@ export default function N8nFlowAnimationHero() {
 
         if (liftEl) liftEl.style.transform = `translateZ(${6 + liftVal}px)`;
         if (bandEl) {
-          bandEl.style.opacity = String(0.12 + 0.88 * gl);
-          bandEl.style.boxShadow = `0 0 ${10 + 60 * gl}px ${rgba(n.color, 0.35 + 0.55 * gl)}, 0 0 ${4 + 22 * gl}px ${rgba(n.color, 0.5 + 0.5 * gl)}`;
+          bandEl.style.opacity = String(0.22 + 0.78 * gl);
+          bandEl.style.boxShadow = `0 0 ${16 + 64 * gl}px ${rgba(n.color, 0.4 + 0.55 * gl)}, 0 0 ${6 + 24 * gl}px ${rgba(n.color, 0.55 + 0.45 * gl)}`;
         }
         if (topEl) {
           topEl.style.filter = `saturate(${0.35 + 0.65 * gl}) brightness(${0.72 + 0.28 * gl})`; // Mayor contraste en modo claro
           topEl.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 2px ${rgba(n.color, 0.35 + 0.65 * gl)}, 0 0 ${6 + 34 * gl}px ${rgba(n.color, 0.5 * gl)}`;
         }
         if (glowEl) {
-          glowEl.style.opacity = String(0.08 + 0.7 * gl);
+          glowEl.style.opacity = String(0.16 + 0.7 * gl);
           glowEl.style.transform = `translate(-50%,-50%) translateZ(0.4px) scale(${1 + 0.45 * gl})`;
         }
         if (shadowEl) {
@@ -343,7 +352,11 @@ export default function N8nFlowAnimationHero() {
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', fit);
-      clearTimeout(initTimeout);
+      window.removeEventListener('load', fit);
+      ro.disconnect();
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
     };
   }, []);
 

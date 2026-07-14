@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import MeshBackground from './MeshBackground';
 import SmoothScroll from './SmoothScroll';
+import FloatingWhatsApp from './FloatingWhatsApp';
 
 export default function Layout() {
   const [loaded, setLoaded] = useState(false);
@@ -53,6 +54,8 @@ export default function Layout() {
         </main>
 
         <Footer />
+
+        <FloatingWhatsApp />
       </div>
     </SmoothScroll>
   );

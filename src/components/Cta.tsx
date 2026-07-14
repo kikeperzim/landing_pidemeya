@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 export default function Cta() {
   return (
     <section className="py-40 bg-transparent relative overflow-hidden">
@@ -17,15 +15,20 @@ export default function Cta() {
         <h2 className="font-headline text-6xl md:text-8xl text-on-surface mb-12 max-w-4xl mx-auto leading-none">
           ¿Listo para automatizar tu restaurante, licorería o distribuidora?
         </h2>
-        <p className="font-body text-on-surface/60 text-xl mb-16 max-w-2xl mx-auto">
+        <p className="font-body text-on-surface/60 text-xl mb-8 max-w-2xl mx-auto">
           Lleva tu operación y ventas por WhatsApp al siguiente nivel con nuestras soluciones inteligentes.
         </p>
-        <Link
-          to="/contactanos"
-          className="inline-block bg-primary-container text-on-primary font-button px-16 py-6 text-xl font-bold active:scale-95 transition-all rounded-2xl shadow-[0px_20px_40px_rgba(251,101,10,0.3)]"
+        <p className="font-label text-primary-container text-sm md:text-base uppercase tracking-widest mb-16">
+          🎁 Primer mes gratis · Sin permanencia
+        </p>
+        <a
+          href="https://wa.me/51904773671?text=Hola%2C%20quiero%20activar%20mi%20mes%20gratis%20de%20PidemeYa%20y%20automatizar%20mi%20negocio."
+          target="_blank"
+          rel="noreferrer"
+          className="inline-block bg-primary-container text-on-primary font-button px-16 py-6 text-xl font-bold active:scale-95 transition-all rounded-2xl shadow-[0px_20px_40px_rgba(251,101,10,0.3)] hover:brightness-110"
         >
           Contactar Ahora
-        </Link>
+        </a>
       </div>
     </section>
   );

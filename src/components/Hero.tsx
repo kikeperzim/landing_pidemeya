@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useRef } from "react";
 import gsap from "gsap";
@@ -109,7 +108,7 @@ export default function Hero() {
       ref={container}
     >
       {/* Animación 3D isométrica de n8n actuando como fondo */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-75 dark:opacity-85 transition-opacity duration-500">
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-90 dark:opacity-100 transition-opacity duration-500">
         <N8nFlowAnimationHero />
       </div>
 
@@ -118,7 +117,7 @@ export default function Hero() {
         className="absolute inset-0 z-5 pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at center, transparent 40%, var(--color-surface, var(--color-background, #131313)) 85%)",
+            "radial-gradient(circle at center, transparent 46%, var(--color-surface, var(--color-background, #131313)) 92%)",
           backdropFilter: "blur(0.5px)",
         }}
       />
@@ -135,19 +134,30 @@ export default function Hero() {
           {splitWords("clientes", true, true)}
         </h1>
 
+        <p
+          ref={textRef}
+          className="font-body text-on-surface/70 text-lg md:text-2xl max-w-2xl leading-relaxed will-change-transform"
+        >
+          Tu bot de WhatsApp responde, registra el pedido y avisa al repartidor{" "}
+          <span className="text-on-surface font-semibold">solo</span>. Vende 24/7 sin
+          contestar un mensaje a mano.
+        </p>
+
         <div
           ref={buttonsRef}
           className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto px-6 sm:px-0"
         >
           <div className="w-full pt-15 sm:w-auto transform-gpu">
-            <Link
-              to="/contactanos"
+            <a
+              href="https://wa.me/51904773671?text=Hola%2C%20quiero%20una%20demo%20del%20sistema%20de%20automatizaci%C3%B3n%20de%20pedidos%20por%20WhatsApp%20de%20PidemeYa."
+              target="_blank"
+              rel="noreferrer"
               onMouseMove={handleMagneticMove}
               onMouseLeave={handleMagneticLeave}
               className="font-button bg-primary-container text-on-primary text-lg md:text-xl px-10 md:px-14 py-4 md:py-6 font-bold rounded-2xl shadow-[0px_20px_40px_rgba(251,101,10,0.3)] hover:shadow-[0px_30px_60px_rgba(251,101,10,0.5)] transition-shadow duration-300 text-center flex items-center justify-center w-full relative overflow-hidden"
             >
               Solicitar demo
-            </Link>
+            </a>
           </div>
 
           <div className="w-full pt-15 sm:w-auto transform-gpu">
@@ -161,6 +171,24 @@ export default function Hero() {
               Ver Funcionalidades
             </HashLink>
           </div>
+        </div>
+
+        {/* Métricas de valor */}
+        <div className="mt-16 md:mt-24 grid grid-cols-3 gap-4 md:gap-12 max-w-2xl w-full">
+          {[
+            { value: "<5s", label: "Respuesta al cliente" },
+            { value: "24/7", label: "Ventas activas" },
+            { value: "0", label: "Pedidos perdidos" },
+          ].map((m) => (
+            <div key={m.label} className="flex flex-col items-center text-center">
+              <span className="font-headline font-black text-3xl md:text-5xl text-primary-container tracking-tight">
+                {m.value}
+              </span>
+              <span className="font-label text-on-surface/50 text-[10px] md:text-xs uppercase tracking-widest mt-2">
+                {m.label}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -125,6 +125,10 @@ export default function Pricing() {
             <p className="text-on-surface/60 font-body text-lg max-w-2xl mx-auto">
               Escoge la potencia que tu negocio necesita para escalar al siguiente nivel.
             </p>
+            <div className="mt-8 inline-flex items-center gap-2 bg-primary-container/10 border border-primary-container/30 text-primary-container font-label text-xs md:text-sm uppercase tracking-widest px-5 py-3 rounded-full">
+              <span className="material-symbols-outlined text-base">redeem</span>
+              Primer mes gratis del sistema completo · Sin permanencia
+            </div>
           </div>
         </ScrollReveal>
 
@@ -179,11 +183,15 @@ export default function Pricing() {
                     ))
                   )}
                 </div>
-                <a 
-                  href={`https://wa.me/51904773671?text=${encodeURIComponent(`Hola, quiero más información sobre el ${plan.name}`)}`}
+                <p className="text-center text-[11px] text-primary-container/80 font-semibold mt-8 flex items-center justify-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm">redeem</span>
+                  Incluye tu primer mes gratis · sin permanencia
+                </p>
+                <a
+                  href={`https://wa.me/51904773671?text=${encodeURIComponent(`Hola, quiero activar mi mes gratis con el ${plan.name} de PidemeYa.`)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className={`block text-center w-full mt-10 py-4 font-headline font-bold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${
+                  className={`block text-center w-full mt-4 py-4 font-headline font-bold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${
                     plan.popular 
                     ? 'bg-primary-container text-on-primary shadow-[0_0_20px_rgba(251,101,10,0.3)] hover:bg-primary-container/90' 
                     : 'bg-on-surface/10 text-on-surface hover:bg-on-surface/20'
