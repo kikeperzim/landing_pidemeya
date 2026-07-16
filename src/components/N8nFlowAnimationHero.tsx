@@ -48,8 +48,11 @@ interface NodeData {
   isBig?: boolean;
 }
 
-export default function N8nFlowAnimationHero() {
+export default function N8nFlowAnimationHero({ playing = true }: { playing?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  // Ref para pausar el bucle de animación sin re-ejecutar el efecto de montaje
+  // (evita recalcular la ruta y reposicionar etiquetas en cada cambio de slide).
+  const playingRef = useRef(playing);
   const stageRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<SVGPathElement>(null);
   const trailSoftRef = useRef<SVGPathElement>(null);
@@ -67,6 +70,10 @@ export default function N8nFlowAnimationHero() {
 
   // Detección dinámica de modo oscuro (el modo claro se activa con la clase 'light')
   const [isDark, setIsDark] = useState(() => !document.documentElement.classList.contains('light'));
+
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -258,6 +265,12 @@ export default function N8nFlowAnimationHero() {
     let rafId: number;
 
     const tick = (now: number) => {
+      // En pausa mantenemos el loop vivo pero sin mutar el DOM: la escena queda
+      // congelada y el compositor descansa (ahorra CPU/batería fuera del slide).
+      if (!playingRef.current) {
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
       const elapsed = now - startTime;
       const progressRatio = (elapsed % cycleDuration) / cycleDuration;
       const headLen = progressRatio * L;

@@ -27,23 +27,30 @@ export default function Layout() {
         {/* NATIVE HIGH PERFORMANCE BACKGROUND */}
         <MeshBackground />
 
-        {/* PREDME-YA PRELOADER */}
+        {/* PIDEME-YA PRELOADER */}
         <div
           id="preloader"
-          className={`fixed inset-0 flex items-center justify-center bg-black z-[9999] transition-opacity duration-1000 cubic-bezier(0.4, 0, 0.2, 1) ${
+          className={`fixed inset-0 flex items-center justify-center bg-white z-[9999] transition-opacity duration-700 ease-out ${
             loaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
           }`}
         >
-          <div className="relative flex items-center justify-center">
-            <div className="w-[180px] h-[180px] rounded-full absolute border-2 border-transparent border-t-[#FB650A] animate-spin shadow-[0_0_15px_rgba(251,101,10,0.2)]"></div>
-            <div className="w-[150px] h-[150px] rounded-full bg-[radial-gradient(circle,rgba(251,101,10,0.15)_0%,transparent_70%)] animate-pulse-glow"></div>
+          <div className="relative flex flex-col items-center gap-8 md:gap-10">
+            {/* Resplandor de marca suave */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-80 md:h-80 rounded-full bg-[radial-gradient(circle,rgba(251,101,10,0.14)_0%,transparent_70%)] blur-2xl animate-pulse-glow pointer-events-none"></div>
+
+            {/* Logo completo PidemeYa */}
             <img
-              src="/icono_pidemeya.webp"
-              alt="Cargando..."
-              className="h-16 w-auto relative z-10 drop-shadow-[0_0_10px_rgba(251,101,10,0.4)]"
+              src="/images/LogoPidemeya.webp"
+              alt="PidemeYa"
+              className="relative z-10 h-14 md:h-20 w-auto animate-logo-breathe drop-shadow-[0_10px_30px_rgba(251,101,10,0.18)]"
               loading="eager"
               fetchPriority="high"
             />
+
+            {/* Barra de progreso indeterminada */}
+            <div className="relative z-10 w-44 md:w-56 h-1.5 rounded-full bg-[#FB650A]/15 overflow-hidden">
+              <div className="absolute inset-y-0 rounded-full bg-gradient-to-r from-[#FB650A] to-[#ff9450] animate-loader-bar"></div>
+            </div>
           </div>
         </div>
 

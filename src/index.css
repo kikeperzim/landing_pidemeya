@@ -201,6 +201,25 @@
   animation: blob 10s infinite alternate;
 }
 
+@keyframes loader-bar {
+  0%   { left: -35%; width: 35%; }
+  50%  { width: 55%; }
+  100% { left: 100%; width: 35%; }
+}
+
+.animate-loader-bar {
+  animation: loader-bar 1.25s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes logo-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-4px) scale(1.03); }
+}
+
+.animate-logo-breathe {
+  animation: logo-breathe 2.4s ease-in-out infinite;
+}
+
 /* Optimize Spline View for mobile */
 @media (max-width: 768px) {
   spline-viewer {
