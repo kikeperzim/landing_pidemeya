@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { NavHashLink as HashLink } from 'react-router-hash-link';
+import { HashLink } from 'react-router-hash-link';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import gsap from 'gsap';
@@ -10,7 +10,6 @@ const navLinks = [
   { id: 'servicios', label: 'Servicios' },
   { id: 'beneficios', label: 'Beneficios' },
   { id: 'proceso', label: 'Proceso' },
-  { id: 'resenas', label: 'Reseñas' },
   { id: 'contacto', label: 'Contáctanos' },
 ];
 
@@ -43,7 +42,7 @@ export default function Header() {
 
       if (location.pathname !== '/') return;
       
-      const sections = ['servicios', 'beneficios', 'proceso', 'resenas', 'contacto'];
+      const sections = ['servicios', 'beneficios', 'proceso', 'contacto'];
       let current = 'inicio';
       const scrollPos = scrollY + 200;
 

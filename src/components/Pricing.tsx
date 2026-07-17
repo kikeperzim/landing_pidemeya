@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 import ScrollReveal from './ScrollReveal';
 
 interface FeatureGroupProps {
@@ -25,6 +25,8 @@ const FeatureGroup: FC<FeatureGroupProps> = ({ title, icon, features }) => (
 );
 
 export default function Pricing() {
+  const [annual, setAnnual] = useState(false);
+
   const plans = [
     {
       name: "PLAN BÁSICO",
@@ -129,6 +131,41 @@ export default function Pricing() {
               <span className="material-symbols-outlined text-base">redeem</span>
               Primer mes gratis del sistema completo · Sin permanencia
             </div>
+
+            <div className="mt-10 flex flex-col items-center gap-3">
+              <div className="inline-flex items-center gap-1 p-1.5 rounded-full bg-surface-container/60 backdrop-blur-md border border-on-surface/10">
+                <button
+                  type="button"
+                  onClick={() => setAnnual(false)}
+                  className={`px-6 py-2.5 rounded-full font-headline font-bold text-sm transition-all duration-300 ${
+                    !annual
+                      ? 'bg-primary-container text-on-primary shadow-[0_0_20px_rgba(251,101,10,0.3)]'
+                      : 'text-on-surface/60 hover:text-on-surface'
+                  }`}
+                >
+                  Mensual
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAnnual(true)}
+                  className={`px-6 py-2.5 rounded-full font-headline font-bold text-sm transition-all duration-300 flex items-center gap-2 ${
+                    annual
+                      ? 'bg-primary-container text-on-primary shadow-[0_0_20px_rgba(251,101,10,0.3)]'
+                      : 'text-on-surface/60 hover:text-on-surface'
+                  }`}
+                >
+                  Anual
+                  <span className={`text-[10px] font-black uppercase tracking-tight px-2 py-0.5 rounded-full transition-colors duration-300 ${
+                    annual ? 'bg-on-primary/20 text-on-primary' : 'bg-primary-container/20 text-primary-container'
+                  }`}>
+                    -8%
+                  </span>
+                </button>
+              </div>
+              <p className="text-on-surface/40 text-xs italic min-h-[1rem]">
+                {annual ? 'Pagando al año, un mes es gratis 🎉' : 'Cambia a anual y ahorra un mes completo'}
+              </p>
+            </div>
           </div>
         </ScrollReveal>
 
@@ -156,8 +193,22 @@ export default function Pricing() {
                   </p>
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-on-surface/60 text-xl font-bold italic">S/</span>
-                    <span className="text-5xl md:text-6xl font-headline font-black text-on-surface">{plan.price}</span>
-                    <span className="text-on-surface/40 text-sm italic">/mes</span>
+                    <span className="text-5xl md:text-6xl font-headline font-black text-on-surface">
+                      {annual ? Number(plan.price) * 11 : plan.price}
+                    </span>
+                    <span className="text-on-surface/40 text-sm italic">{annual ? '/año' : '/mes'}</span>
+                  </div>
+                  <div className="mt-3 h-5 flex items-center justify-center">
+                    {annual ? (
+                      <span className="inline-flex items-center gap-1.5 text-primary-container text-xs font-semibold">
+                        <span className="text-on-surface/30 line-through">S/ {Number(plan.price) * 12}</span>
+                        Ahorras S/ {plan.price} al año
+                      </span>
+                    ) : (
+                      <span className="text-on-surface/30 text-xs italic">
+                        S/ {Number(plan.price) * 11} al año pagando anual
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -188,7 +239,7 @@ export default function Pricing() {
                   Incluye tu primer mes gratis · sin permanencia
                 </p>
                 <a
-                  href={`https://wa.me/51904773671?text=${encodeURIComponent(`Hola, quiero activar mi mes gratis con el ${plan.name} de PidemeYa.`)}`}
+                  href={`https://wa.me/51904773671?text=${encodeURIComponent(`Hola, quiero activar mi mes gratis con el ${plan.name} de PidemeYa (facturación ${annual ? 'anual' : 'mensual'}).`)}`}
                   target="_blank"
                   rel="noreferrer"
                   className={`block text-center w-full mt-4 py-4 font-headline font-bold rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${

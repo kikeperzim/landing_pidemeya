@@ -7,18 +7,18 @@ export default function Features() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
           <ScrollReveal direction="right" distance={100}>
             <div className="relative">
-              <div className="aspect-square bg-surface-container-high overflow-hidden rounded-3xl shadow-2xl">
+              <div className="aspect-[3/2] bg-surface-container-high overflow-hidden rounded-3xl shadow-2xl group">
                 <img
-                  className="w-full h-full object-cover transition-all duration-700 hover:scale-105"
-                  alt="High tech minimal server room aesthetics"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLDJD5hHTZqfrac9oTGtKDvKJ31NavyPwlp0GRkXWKehHHk_pRHWLx1NfFSOyW2uU0kJ9tQ19mr9MQGYlzz_tZ5ef_8MY5WMl2CMeLOv4zwqmh-FlvE_8Ua24drU6BzteoD8sKj8oSaOH1eaR2Tv4rN8vzxHLNOSjyBgtcLMWEQsQxMe-5A5CxwaubjoyspOcVusqB1CpQZ07rVL_PEtHl25TOMb_a3g3pPHgDr2tODDs3D-w4MXd3kd86IMadW2JwzvKuKT8UpFc"
+                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                  alt="Sistema de pedidos por WhatsApp de PidemeYa: bot, repartidor, ubicación y panel de gestión"
+                  src="/por-que-pidemeya.webp"
                   loading="lazy"
                 />
               </div>
-              <div className="absolute -bottom-6 md:-bottom-12 -right-6 md:-right-12 bg-primary-container p-6 md:p-12 rounded-2xl shadow-2xl">
-                <span className="font-headline text-4xl md:text-6xl text-on-primary">99%</span>
+              <div className="absolute -bottom-6 md:-bottom-12 -right-6 md:-right-12 bg-primary-container p-6 md:p-10 rounded-2xl shadow-2xl">
+                <span className="font-headline text-4xl md:text-6xl text-on-primary">24/7</span>
                 <p className="font-label uppercase tracking-widest text-[10px] md:text-xs mt-1 md:mt-2 text-on-primary font-bold">
-                  Optimización &amp; Velocidad
+                  Atención automática
                 </p>
               </div>
             </div>
@@ -27,32 +27,32 @@ export default function Features() {
           <div className="mt-8 lg:mt-0 text-center lg:text-left">
             <ScrollReveal>
               <span className="font-label text-primary-container font-bold uppercase tracking-[0.3em] text-xs block mb-6">
-                Por qué nosotros
+                Por qué PidemeYa
               </span>
-              <h2 className="font-headline text-4xl md:text-6xl text-on-surface mb-8 md:mb-12 tracking-tight">Ingeniería digital sin compromisos.</h2>
+              <h2 className="font-headline text-4xl md:text-6xl text-on-surface mb-8 md:mb-12 tracking-tight">Menos llamadas, más pedidos.</h2>
             </ScrollReveal>
-            
+
             <ul className="space-y-8 md:space-y-12 text-left">
               {[
                 {
                   num: "01",
-                  title: "Velocidad Extrema",
-                  desc: "Páginas optimizadas para cargar en milisegundos. El tiempo es dinero, nosotros te ahorramos ambos."
+                  title: "Cero pedidos perdidos",
+                  desc: "Tu bot atiende por WhatsApp las 24 horas: responde, toma el pedido y confirma, aunque estés ocupado o con el local cerrado."
                 },
                 {
                   num: "02",
-                  title: "Automatización Nativa",
-                  desc: "Tu sistema web no es solo un folleto, es una máquina de ventas que trabaja con automatizaciones de whatsapp business."
+                  title: "Se registra y se asigna solo",
+                  desc: "Cada pedido se guarda automáticamente y se envía al repartidor disponible. Sin apuntar en papel, sin llamadas para coordinar."
                 },
                 {
                   num: "03",
-                  title: "Soporte 24/7",
-                  desc: "Nuestros sistemas son críticos para tu operación. Estamos ahí cuando más nos necesitas."
+                  title: "Soporte real cuando lo necesitas",
+                  desc: "Somos parte de tu operación diaria. Cuando algo se complica, estamos ahí para resolverlo rápido."
                 }
               ].map((item, idx) => (
                 <ScrollReveal key={idx} delay={0.1 * (idx + 1)} direction="left">
                   <li className="flex gap-6 group">
-                    <span className="font-serif text-3xl md:text-4xl text-on-surface/10 group-hover:text-primary-container transition-colors">
+                    <span className="font-headline text-3xl md:text-4xl text-on-surface/10 group-hover:text-primary-container transition-colors">
                       {item.num}
                     </span>
                     <div>
