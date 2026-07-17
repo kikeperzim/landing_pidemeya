@@ -14,7 +14,7 @@ export default function Layout() {
     // However, I'll simulate a brief load for the "wow" effect of the preloader.
     const timeout = setTimeout(() => {
       setLoaded(true);
-    }, 1500);
+    }, 700);
 
     return () => {
       clearTimeout(timeout);
