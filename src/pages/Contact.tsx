@@ -21,6 +21,11 @@ export default function Contact() {
       `Asunto: ${subject}`,
       email ? `Correo: ${email}` : '',
       message ? `Mensaje: ${message}` : '',
+      '',
+      `— Acepté la Política de Privacidad el ${new Date().toLocaleString('es-PE', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      })}.`,
     ].filter(Boolean);
 
     const url = `https://wa.me/51904773671?text=${encodeURIComponent(lines.join('\n'))}`;
@@ -120,6 +125,29 @@ export default function Contact() {
                   placeholder="Cuéntanos más..."
                 ></textarea>
               </div>
+
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  name="consentimiento"
+                  required
+                  className="mt-1 w-4 h-4 accent-[color:var(--color-primary-container)] cursor-pointer shrink-0"
+                />
+                <span className="text-xs md:text-sm text-on-surface/60 group-hover:text-on-surface/80 transition-colors leading-relaxed">
+                  He leído y acepto la{' '}
+                  <Link to="/privacidad" className="text-primary-container hover:underline">
+                    Política de Privacidad
+                  </Link>{' '}
+                  y autorizo el tratamiento de mis datos personales por Informatic Data Peru E.I.R.L. con la única
+                  finalidad de atender esta consulta. *
+                </span>
+              </label>
+
+              <p className="text-[11px] text-on-surface/35 leading-relaxed">
+                Al enviar, se abrirá WhatsApp con su mensaje ya redactado. Los datos viajan por WhatsApp (Meta
+                Platforms, Inc.) y no se almacenan en este sitio web. Puede solicitar el acceso, rectificación o
+                eliminación de sus datos en cualquier momento escribiendo a contacto@pidemeya.com.
+              </p>
 
               <button
                 type="submit"

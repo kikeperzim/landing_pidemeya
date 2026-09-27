@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { isLowPowerDevice, quantize } from '../utils/perf';
 
 // Easing helper
 const elasticOut = (t: number) => {
@@ -70,6 +71,10 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
 
   // Detección dinámica de modo oscuro (el modo claro se activa con la clase 'light')
   const [isDark, setIsDark] = useState(() => !document.documentElement.classList.contains('light'));
+
+  // En equipos de gama baja la escena se pinta UNA vez, en su estado final,
+  // y no se abre ningún bucle de animación.
+  const [lowPower] = useState(isLowPowerDevice);
 
   useEffect(() => {
     playingRef.current = playing;
@@ -202,22 +207,31 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
     const L = trail.getTotalLength();
     const cometLength = 200;
 
-    // Calcular la fracción de la curva para cada nodo
-    const nodeFractions = nodes.map(n => {
-      let best = Infinity;
-      let bl = 0;
-      const SAMP = 800;
-      for (let i = 0; i <= SAMP; i++) {
-        const len = (i / SAMP) * L;
-        const pt = trail.getPointAtLength(len);
-        const dd = Math.pow(pt.x - n.cx, 2) + Math.pow(pt.y - n.cy, 2);
-        if (dd < best) {
-          best = dd;
-          bl = len;
+    // Calcular la fracción de la curva para cada nodo.
+    // Búsqueda en dos pasadas (gruesa + fina) en vez de 800 muestras lineales:
+    // misma precisión con ~140 llamadas a getPointAtLength por nodo en lugar de
+    // 800, lo que evita un pico de bloqueo al montar en CPUs lentas.
+    const nearestFraction = (n: NodeData) => {
+      const scan = (from: number, to: number, steps: number) => {
+        let best = Infinity;
+        let bl = from;
+        for (let i = 0; i <= steps; i++) {
+          const len = from + ((to - from) * i) / steps;
+          const pt = trail.getPointAtLength(len);
+          const dd = (pt.x - n.cx) ** 2 + (pt.y - n.cy) ** 2;
+          if (dd < best) {
+            best = dd;
+            bl = len;
+          }
         }
-      }
-      return bl / L;
-    });
+        return bl;
+      };
+      const COARSE = 100;
+      const coarse = scan(0, L, COARSE);
+      const window = L / COARSE;
+      return scan(Math.max(0, coarse - window), Math.min(L, coarse + window), 40) / L;
+    };
+    const nodeFractions = nodes.map(nearestFraction);
 
     let scaleFactor = 1;
 
@@ -259,20 +273,17 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
     const t2 = setTimeout(fit, 400);
     const t3 = setTimeout(fit, 1200);
 
-    // Bucle de animación (requestAnimationFrame)
+    // Caché de las escrituras caras (box-shadow y filter fuerzan repintado; a
+    // diferencia de opacity/transform no las resuelve el compositor). Guardamos
+    // el último valor CUANTIZADO escrito en cada elemento y saltamos la
+    // escritura mientras no cambie de escalón.
+    const lastWrite = nodes.map(() => ({ band: -1, top: -1, shadow: -1 }));
+
     const cycleDuration = 7000; // 7 segundos por ciclo
     const startTime = performance.now();
-    let rafId: number;
+    let rafId = 0;
 
-    const tick = (now: number) => {
-      // En pausa mantenemos el loop vivo pero sin mutar el DOM: la escena queda
-      // congelada y el compositor descansa (ahorra CPU/batería fuera del slide).
-      if (!playingRef.current) {
-        rafId = requestAnimationFrame(tick);
-        return;
-      }
-      const elapsed = now - startTime;
-      const progressRatio = (elapsed % cycleDuration) / cycleDuration;
+    const renderFrame = (progressRatio: number, now: number) => {
       const headLen = progressRatio * L;
 
       // Actualizar el cable y el cometa
@@ -328,14 +339,24 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
         const checkEl = checkRefs.current[i];
         const labelEl = labelRefs.current[i];
 
+        // Escalón de 1/32: imperceptible a la vista, pero durante la fase de
+        // "hold" (donde gl solo oscila ±0.05) elimina casi todos los repintados.
+        const glStep = quantize(gl, 1 / 32);
+        const tStep = quantize(tVal, 1 / 8);
+        const cache = lastWrite[i];
+
         if (liftEl) liftEl.style.transform = `translateZ(${6 + liftVal}px)`;
         if (bandEl) {
           bandEl.style.opacity = String(0.22 + 0.78 * gl);
-          bandEl.style.boxShadow = `0 0 ${16 + 64 * gl}px ${rgba(n.color, 0.4 + 0.55 * gl)}, 0 0 ${6 + 24 * gl}px ${rgba(n.color, 0.55 + 0.45 * gl)}`;
+          if (cache.band !== glStep) {
+            cache.band = glStep;
+            bandEl.style.boxShadow = `0 0 ${16 + 64 * glStep}px ${rgba(n.color, 0.4 + 0.55 * glStep)}, 0 0 ${6 + 24 * glStep}px ${rgba(n.color, 0.55 + 0.45 * glStep)}`;
+          }
         }
-        if (topEl) {
-          topEl.style.filter = `saturate(${0.35 + 0.65 * gl}) brightness(${0.72 + 0.28 * gl})`; // Mayor contraste en modo claro
-          topEl.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 2px ${rgba(n.color, 0.35 + 0.65 * gl)}, 0 0 ${6 + 34 * gl}px ${rgba(n.color, 0.5 * gl)}`;
+        if (topEl && cache.top !== glStep) {
+          cache.top = glStep;
+          topEl.style.filter = `saturate(${0.35 + 0.65 * glStep}) brightness(${0.72 + 0.28 * glStep})`; // Mayor contraste en modo claro
+          topEl.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 0 2px ${rgba(n.color, 0.35 + 0.65 * glStep)}, 0 0 ${6 + 34 * glStep}px ${rgba(n.color, 0.5 * glStep)}`;
         }
         if (glowEl) {
           glowEl.style.opacity = String(0.16 + 0.7 * gl);
@@ -344,7 +365,11 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
         if (shadowEl) {
           shadowEl.style.transform = `translate(-50%,-50%) translateZ(0.2px) scale(${1 + 0.55 * tVal})`;
           shadowEl.style.opacity = String(0.5 - 0.26 * tVal);
-          shadowEl.style.filter = `blur(${7 + 11 * tVal}px)`;
+          // blur() re-rasteriza el div de 158px: solo 8 valores distintos.
+          if (cache.shadow !== tStep) {
+            cache.shadow = tStep;
+            shadowEl.style.filter = `blur(${7 + 11 * tStep}px)`;
+          }
         }
         if (labelEl) {
           labelEl.style.opacity = String(Math.min(gl * 1.5, 1));
@@ -356,11 +381,62 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
           checkEl.style.transform = `translate(18px,-58px) translateZ(54px) scale(${sc})`;
         }
       });
-
-      rafId = requestAnimationFrame(tick);
     };
 
-    rafId = requestAnimationFrame(tick);
+    // Fotograma representativo: recorrido completo y los cinco nodos encendidos.
+    const POSTER_RATIO = 0.86;
+
+    if (lowPower) {
+      // Sin bucle: se pinta una vez y el compositor queda libre.
+      renderFrame(POSTER_RATIO, startTime);
+    } else {
+      // Vigilante de FPS: las heurísticas de gama baja no cubren todos los
+      // equipos (deviceMemory no existe en Firefox ni Safari). Si tras el
+      // arranque el promedio real no llega a 24 fps, congelamos la escena en el
+      // fotograma final en vez de seguir asfixiando la página.
+      let frames = 0;
+      let watchStart = 0;
+      let lastFrame = 0;
+      let degraded = false;
+
+      const tick = (now: number) => {
+        // En pausa mantenemos el loop vivo pero sin mutar el DOM: la escena queda
+        // congelada y el compositor descansa (ahorra CPU/batería fuera del slide).
+        if (!playingRef.current) {
+          // Se descarta la ventana de medición: al volver al slide el lapso en
+          // pausa no debe contarse como frames lentos.
+          watchStart = 0;
+          frames = 0;
+          rafId = requestAnimationFrame(tick);
+          return;
+        }
+
+        if (!degraded) {
+          // Un salto grande entre frames significa pestaña en segundo plano
+          // (rAF suspendido), no un equipo lento: se reinicia la ventana.
+          if (watchStart === 0 || now - lastFrame > 500) {
+            watchStart = now;
+            frames = 0;
+          } else if (++frames >= 90) {
+            const fps = (frames * 1000) / (now - watchStart);
+            if (fps < 24) {
+              degraded = true;
+              renderFrame(POSTER_RATIO, now);
+              return; // no se vuelve a pedir frame
+            }
+            frames = 0;
+            watchStart = now;
+          }
+          lastFrame = now;
+        }
+
+        const elapsed = now - startTime;
+        renderFrame((elapsed % cycleDuration) / cycleDuration, now);
+        rafId = requestAnimationFrame(tick);
+      };
+
+      rafId = requestAnimationFrame(tick);
+    }
 
     return () => {
       cancelAnimationFrame(rafId);
@@ -371,7 +447,9 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
       clearTimeout(t2);
       clearTimeout(t3);
     };
-  }, []);
+    // `lowPower` se resuelve una sola vez y nunca cambia: el efecto sigue
+    // ejecutándose únicamente al montar.
+  }, [lowPower]);
 
   return (
     <div
@@ -379,7 +457,9 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
       className="absolute inset-0 w-full h-full overflow-hidden bg-transparent"
     >
       <style>{`
-        @keyframes gridDrift { to { background-position: 72px 72px; } }
+        /* Deriva por transform (compuesta en GPU) en vez de background-position,
+           que repintaba los 2600x2600px enmascarados en cada frame. */
+        @keyframes gridDrift { to { transform: translate3d(72px, 72px, 0); } }
         @keyframes ambient { 0%,100% { opacity: .5; } 50% { opacity: .85; } }
       `}</style>
       
@@ -399,7 +479,7 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
             background: isDark 
               ? 'radial-gradient(ellipse at center, rgba(45,212,160,.09), transparent 70%)'
               : 'radial-gradient(ellipse at center, rgba(45,212,160,.035), transparent 70%)',
-            animation: 'ambient 9s ease-in-out infinite',
+            animation: lowPower ? 'none' : 'ambient 9s ease-in-out infinite',
           }}
         />
 
@@ -418,19 +498,28 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
               transformStyle: 'preserve-3d',
             }}
           >
-            {/* Floor Grid */}
+            {/* Floor Grid — la máscara vive en el contenedor y la rejilla se
+                desplaza dentro de él; así el translate no arrastra la máscara. */}
             <div
-              className="absolute -left-[500px] -top-[500px] w-[2600px] h-[2600px]"
+              className="absolute -left-[500px] -top-[500px] w-[2600px] h-[2600px] overflow-hidden"
               style={{
-                backgroundImage: isDark
-                  ? 'linear-gradient(rgba(120,255,205,.085) 1px,transparent 1px),linear-gradient(90deg,rgba(120,255,205,.085) 1px,transparent 1px)'
-                  : 'linear-gradient(rgba(0,0,0,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.08) 1px,transparent 1px)',
-                backgroundSize: '72px 72px',
                 WebkitMaskImage: 'radial-gradient(ellipse 42% 42% at 50% 50%,#000 38%,transparent 82%)',
                 maskImage: 'radial-gradient(ellipse 42% 42% at 50% 50%,#000 38%,transparent 82%)',
-                animation: 'gridDrift 9s linear infinite',
               }}
-            />
+            >
+              {/* Sobresale 72px (un paso de rejilla) para que el bucle no deje borde. */}
+              <div
+                className="absolute -inset-[72px]"
+                style={{
+                  backgroundImage: isDark
+                    ? 'linear-gradient(rgba(120,255,205,.085) 1px,transparent 1px),linear-gradient(90deg,rgba(120,255,205,.085) 1px,transparent 1px)'
+                    : 'linear-gradient(rgba(0,0,0,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.08) 1px,transparent 1px)',
+                  backgroundSize: '72px 72px',
+                  animation: lowPower ? 'none' : 'gridDrift 9s linear infinite',
+                  willChange: lowPower ? 'auto' : 'transform',
+                }}
+              />
+            </div>
 
             {/* Cables / Pulse Trail */}
             <svg
@@ -439,7 +528,14 @@ export default function N8nFlowAnimationHero({ playing = true }: { playing?: boo
               style={{ transform: 'translateZ(1px)' }}
             >
               <defs>
-                <filter id="pglow" x="-90%" y="-90%" width="280%" height="280%">
+                {/*
+                  Región del filtro ajustada al mínimo necesario. Con
+                  stdDeviation 7 el desenfoque no se extiende más de ~21px fuera
+                  del trazo, así que el x/y/width/height anterior (-90% / 280%)
+                  obligaba a re-desenfocar una superficie ~8x mayor de la útil en
+                  CADA frame, porque la geometría del trazo cambia siempre.
+                */}
+                <filter id="pglow" x="-4%" y="-4%" width="108%" height="108%">
                   <feGaussianBlur stdDeviation="7" result="b" />
                   <feMerge>
                     <feMergeNode in="b" />

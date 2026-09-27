@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { PROVEEDOR } from '../config/legal';
 
 export default function Footer() {
   return (
@@ -8,15 +9,18 @@ export default function Footer() {
           <Link to="/">
             <img src="/images/LogoPidemeya.webp" alt="PidemeYa Logo" className="h-8 md:h-10 w-auto" />
           </Link>
-          <p className="font-body text-on-surface/50 max-w-xs text-[10px] md:text-xs">
-            © {new Date().getFullYear()} PidemeYa. Todos los derechos reservados.
-            <br className="md:hidden" /> Innovación digital para el sector energético.
+          <p className="font-body text-on-surface/50 max-w-xs text-[10px] md:text-xs leading-relaxed">
+            Automatización de pedidos por WhatsApp para licorerías, restaurantes y distribuidoras de agua y gas.
+          </p>
+          <p className="font-body text-on-surface/35 max-w-xs text-[10px] md:text-xs leading-relaxed">
+            © {new Date().getFullYear()} {PROVEEDOR.nombreComercial} · {PROVEEDOR.razonSocial} · RUC{' '}
+            {PROVEEDOR.ruc}. Todos los derechos reservados.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-[10px] md:text-xs font-label uppercase tracking-widest text-on-surface">
-          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/privacidad">Privacidad</Link>
-          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/terminos">Términos</Link>
-          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/contactanos">Contactanos</Link>
+          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/privacidad">Política de Privacidad</Link>
+          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/terminos">Términos y Condiciones</Link>
+          <Link className="text-on-surface/40 hover:text-primary-container transition-colors" to="/contactanos">Contáctanos</Link>
         </div>
         <div className="flex gap-6 md:gap-8 justify-center lg:justify-end">
           {/* WhatsApp Icon */}
@@ -50,6 +54,25 @@ export default function Footer() {
             <span className="text-[9px] md:text-[10px] font-label uppercase tracking-widest text-[#1877F2] font-bold">Facebook</span>
           </a>
         </div>
+      </div>
+
+      {/* Libro de Reclamaciones — acceso visible exigido por el D.S. 011-2011-PCM */}
+      <div className="border-t border-on-surface/5 px-6 md:px-12 py-4 flex justify-center">
+        <Link
+          to="/libro-de-reclamaciones"
+          className="group inline-flex items-center gap-2.5 border border-on-surface/15 hover:border-primary-container/50 bg-surface-container/40 hover:bg-surface-container/70 rounded-lg px-3.5 py-2 transition-all"
+          title="Libro de Reclamaciones Virtual"
+        >
+          <span className="material-symbols-outlined text-primary-container text-lg leading-none">menu_book</span>
+          <span className="text-left leading-tight">
+            <span className="block font-label uppercase tracking-widest text-[9px] md:text-[10px] text-on-surface/80 font-bold">
+              Libro de Reclamaciones
+            </span>
+            <span className="block text-[9px] md:text-[10px] text-on-surface/40">
+              Registra aquí tu queja o reclamo
+            </span>
+          </span>
+        </Link>
       </div>
     </footer>
   );

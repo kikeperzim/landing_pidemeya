@@ -2,16 +2,19 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { isLowPowerDevice } from '../utils/perf';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// En móvil (o con "reduce motion") NO animamos los blobs: escalar/mover un
-// elemento con blur enorme obliga a re-rasterizar el desenfoque cada frame,
-// lo que hunde el FPS en GPUs de celular. En desktop sí mantenemos el parallax.
+// En móvil, con "reduce motion" o en equipos de gama baja NO animamos los blobs:
+// escalar/mover un elemento con blur enorme obliga a re-rasterizar el desenfoque
+// cada frame, lo que hunde el FPS en GPUs integradas. El ancho no basta como
+// criterio — una laptop de 4 GB también es "desktop" — así que además se
+// consulta la capacidad real del equipo.
 const isDesktop = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(min-width: 768px)').matches &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  !isLowPowerDevice();
 
 export default function MeshBackground() {
   const blob1 = useRef<HTMLDivElement>(null);

@@ -165,6 +165,9 @@ export default function Pricing() {
               <p className="text-on-surface/40 text-xs italic min-h-[1rem]">
                 {annual ? 'Pagando al año, un mes es gratis 🎉' : 'Cambia a anual y ahorra un mes completo'}
               </p>
+              <p className="text-on-surface/40 text-xs mt-2">
+                Todos los precios están expresados en soles (S/) e incluyen IGV.
+              </p>
             </div>
           </div>
         </ScrollReveal>
@@ -198,7 +201,10 @@ export default function Pricing() {
                     </span>
                     <span className="text-on-surface/40 text-sm italic">{annual ? '/año' : '/mes'}</span>
                   </div>
-                  <div className="mt-3 h-5 flex items-center justify-center">
+                  <p className="mt-2 font-label text-[10px] uppercase tracking-widest text-on-surface/40">
+                    IGV incluido
+                  </p>
+                  <div className="mt-2 h-5 flex items-center justify-center">
                     {annual ? (
                       <span className="inline-flex items-center gap-1.5 text-primary-container text-xs font-semibold">
                         <span className="text-on-surface/30 line-through">S/ {Number(plan.price) * 12}</span>

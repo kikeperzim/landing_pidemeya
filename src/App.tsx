@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import Contact from './pages/Contact';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import Complaints from './pages/Complaints';
+import DataAnnex from './pages/DataAnnex';
 import { ThemeProvider } from './context/ThemeContext';
 import './index.css';
 
@@ -17,6 +19,8 @@ function App() {
             <Route path="contactanos" element={<Contact />} />
             <Route path="privacidad" element={<Privacy />} />
             <Route path="terminos" element={<Terms />} />
+            <Route path="libro-de-reclamaciones" element={<Complaints />} />
+            <Route path="anexo-datos" element={<DataAnnex />} />
             {/* Default fallback route */}
             <Route path="*" element={<Home />} />
           </Route>
